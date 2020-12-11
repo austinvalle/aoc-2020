@@ -8,8 +8,6 @@ import (
 )
 
 // RunSolution - https://adventofcode.com/2020/day/1
-// Find the two entries in 'expense-report.txt' that sum to 2020
-// The answer is those two entries multiplied together
 func RunSolution() error {
 	expenseReportBytes, err := ioutil.ReadFile("./day1/expense-report.txt")
 	if err != nil {

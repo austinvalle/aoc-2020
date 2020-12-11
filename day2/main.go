@@ -16,7 +16,6 @@ type password struct {
 }
 
 // RunSolution - https://adventofcode.com/2020/day/2
-// Find how many passwords are valid, given the policy and password in 'passwords.txt'
 func RunSolution() error {
 	passwordsFile, err := os.Open("./day2/passwords.txt")
 	if err != nil {
