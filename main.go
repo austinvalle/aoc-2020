@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/austinvalle/aoc-2020/day1"
+	"github.com/austinvalle/aoc-2020/day2"
 )
 
 func main() {
@@ -16,6 +17,8 @@ func main() {
 	switch *dayNumberPtr {
 	case 1:
 		err = day1.RunSolution()
+	case 2:
+		err = day2.RunSolution()
 	}
 
 	if err != nil {
