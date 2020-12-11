@@ -21,13 +21,17 @@ func RunSolution() error {
 		return err
 	}
 
-	result, err := find2020Expense(expenseItems)
-
+	result1, err := findPart1Solution(expenseItems)
 	if err != nil {
 		return err
 	}
+	fmt.Printf("Day 1, Part 1 Result: %d\n", result1)
 
-	fmt.Printf("Day 1 Result: %d", result)
+	result2, err := findPart2Solution(expenseItems)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Day 1, Part 2 Result: %d\n", result2)
 
 	return nil
 }
@@ -50,14 +54,32 @@ func getExpenseLineItems(expenseReport string) (expenseLineItems []int, err erro
 	return expenseLineItems, nil
 }
 
-func find2020Expense(expenseItems []int) (int, error) {
+// O(n) solution
+func findPart1Solution(expenseItems []int) (int, error) {
+	visitedExpenses := make(map[int]bool)
+	for _, expense := range expenseItems {
+		matchingExpense := 2020 - expense
+		if _, ok := visitedExpenses[matchingExpense]; ok {
+			return expense * matchingExpense, nil
+		}
+
+		visitedExpenses[expense] = true
+	}
+
+	return 0, fmt.Errorf("Couldn't find two numbers in the expense report adding to 2020")
+}
+
+// O(n^3) solution, I'm lazy
+func findPart2Solution(expenseItems []int) (int, error) {
 	for idx1, expense1 := range expenseItems {
-		for idx2, expense2 := range expenseItems {
-			if idx1 != idx2 && expense1+expense2 == 2020 {
-				return expense1 * expense2, nil
+		for idx2, expense2 := range expenseItems[idx1:] {
+			for _, expense3 := range expenseItems[idx2:] {
+				if expense1+expense2+expense3 == 2020 {
+					return expense1 * expense2 * expense3, nil
+				}
 			}
 		}
 	}
 
-	return 0, fmt.Errorf("Couldn't find two numbers in the expense report adding to 2020")
+	return 0, fmt.Errorf("Couldn't find three numbers in the expense report adding to 2020")
 }
