@@ -7,6 +7,7 @@ import (
 	"github.com/austinvalle/aoc-2020/day1"
 	"github.com/austinvalle/aoc-2020/day2"
 	"github.com/austinvalle/aoc-2020/day3"
+	"github.com/austinvalle/aoc-2020/day4"
 )
 
 func main() {
@@ -22,6 +23,8 @@ func main() {
 		err = day2.RunSolution()
 	case 3:
 		err = day3.RunSolution()
+	case 4:
+		err = day4.RunSolution()
 	}
 
 	if err != nil {
