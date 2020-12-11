@@ -9,10 +9,10 @@ import (
 )
 
 type password struct {
-	password        string
-	requiredLetter  string
-	minimumRequired int
-	maximumAllowed  int
+	password       string
+	requiredLetter string
+	firstNumber    int
+	secondNumber   int
 }
 
 // RunSolution - https://adventofcode.com/2020/day/2
@@ -23,7 +23,8 @@ func RunSolution() error {
 		return err
 	}
 
-	validPasswords := 0
+	validSledRentalPasswords := 0
+	validTobogganPasswords := 0
 	fileScanner := bufio.NewScanner(passwordsFile)
 	for fileScanner.Scan() {
 		pass, err := parsePasswordLine(fileScanner.Text())
@@ -31,12 +32,17 @@ func RunSolution() error {
 			return err
 		}
 
-		if isValidPassword(pass) {
-			validPasswords++
+		if isValidSledRentalPassword(pass) {
+			validSledRentalPasswords++
+		}
+
+		if isValidTobogganPassword(pass) {
+			validTobogganPasswords++
 		}
 	}
 
-	fmt.Printf("Day 2, Part 1 Result: %d valid passwords", validPasswords)
+	fmt.Printf("Day 2, Part 1 Result: %d valid sled rental passwords\n", validSledRentalPasswords)
+	fmt.Printf("Day 2, Part 2 Result: %d valid toboggan passwords\n", validTobogganPasswords)
 	return nil
 }
 
@@ -51,25 +57,32 @@ func parsePasswordLine(passwordLine string) (password, error) {
 	if len(rangeArr) < 2 {
 		return password{}, fmt.Errorf("Invalid password letter range: %s", passwordLine)
 	}
-	minimumRequired, err := strconv.Atoi(rangeArr[0])
+	firstNumber, err := strconv.Atoi(rangeArr[0])
 	if err != nil {
 		return password{}, err
 	}
 
-	maximumAllowed, err := strconv.Atoi(rangeArr[1])
+	secondNumber, err := strconv.Atoi(rangeArr[1])
 	if err != nil {
 		return password{}, err
 	}
 
 	return password{
-		password:        strings.TrimSpace(splitStrArray[2]),
-		requiredLetter:  strings.TrimSuffix(splitStrArray[1], ": "),
-		minimumRequired: minimumRequired,
-		maximumAllowed:  maximumAllowed,
+		password:       strings.TrimSpace(splitStrArray[2]),
+		requiredLetter: strings.TrimSuffix(splitStrArray[1], ": "),
+		firstNumber:    firstNumber,
+		secondNumber:   secondNumber,
 	}, nil
 }
 
-func isValidPassword(pass password) bool {
+func isValidSledRentalPassword(pass password) bool {
 	numOfOccurences := strings.Count(pass.password, pass.requiredLetter)
-	return numOfOccurences >= pass.minimumRequired && numOfOccurences <= pass.maximumAllowed
+	return numOfOccurences >= pass.firstNumber && numOfOccurences <= pass.secondNumber
+}
+
+func isValidTobogganPassword(pass password) bool {
+	isInFirst := pass.password[pass.firstNumber-1:pass.firstNumber] == pass.requiredLetter
+	isInSecond := pass.password[pass.secondNumber-1:pass.secondNumber] == pass.requiredLetter
+	// golang doesn't support a XOR logical operator, so this is an equivalent
+	return isInFirst != isInSecond
 }
